@@ -159,9 +159,22 @@ struct i2c_pads_info i2c_pad_info2 = {
 #endif
 
 int dram_init(void)
+ {
+	gd->ram_size = get_ram_size((long *)PHYS_SDRAM_1, PHYS_SDRAM_1_SIZE);
+#if (CONFIG_NR_DRAM_BANKS == 2)
+	gd->ram_size = gd->ram_size + get_ram_size((long *)PHYS_SDRAM_2, PHYS_SDRAM_2_SIZE) ;
+#endif
+	return 0;
+}
+
+void dram_init_banksize(void)
 {
-    gd->ram_size = (phys_size_t)CONFIG_DDR_MB * 1024 * 1024;
-    return 0;
+	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
+	gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
+#if (CONFIG_NR_DRAM_BANKS == 2)
+	gd->bd->bi_dram[1].start = PHYS_SDRAM_2;
+	gd->bd->bi_dram[1].size = PHYS_SDRAM_2_SIZE;
+#endif
 }
 
 static void setup_iomux_uart(void)
@@ -413,7 +426,7 @@ int overwrite_console(void)
 int board_init(void)
 {
     /* address of boot parameters */
-    gd->bd->bi_boot_params = PHYS_SDRAM + 0x100;
+    gd->bd->bi_boot_params = PHYS_SDRAM_1 + 0x100;
 
 #ifdef CONFIG_MXC_SPI
     setup_spi();

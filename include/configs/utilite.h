@@ -111,8 +111,10 @@
 #define CONFIG_I2C_MXC
 #define CONFIG_SYS_I2C_SPEED		100000
 
+#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
+
 /* Framebuffer */
-#undef CONFIG_VIDEO /** Turn it on if required **/
+#undef CONFIG_VIDEO /** Turn it on/off as required **/
 #ifdef CONFIG_VIDEO
 #define CONFIG_VIDEO
 #define CONFIG_VIDEO_IPUV3
@@ -121,7 +123,6 @@
 #define CONFIG_CFB_CONSOLE_ANSI
 #define CONFIG_VGA_AS_SINGLE_DEVICE
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
-#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_VIDEO_BMP_RLE8
 #define CONFIG_IMX_HDMI
 
@@ -134,7 +135,7 @@
 #endif
 
 /* USB Configs */
-#undef CONFIG_CMD_USB /** Turn it on if required **/
+#define CONFIG_CMD_USB /** Turn it on/off as required **/
 #ifdef CONFIG_CMD_USB
 #define CONFIG_USB_EHCI
 #define CONFIG_USB_EHCI_MX6
@@ -213,11 +214,23 @@
 
 #define CONFIG_CMDLINE_EDITING
 
-/* Physical Memory Map */
-#define CONFIG_NR_DRAM_BANKS		1
-#define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
+/** Need to put this here for now ... not the right place **/
+#define CONFIG_NR_DRAM_BANKS    2
 
-#define CONFIG_SYS_SDRAM_BASE		PHYS_SDRAM
+/*-----------------------------------------------------------------------
+ * Physical Memory Map
+ */
+#define PHYS_SDRAM_1            MMDC0_ARB_BASE_ADDR
+#define PHYS_SDRAM_2            MMDC1_ARB_BASE_ADDR
+
+#define iomem_valid_addr(addr, size) \
+ ((addr >= PHYS_SDRAM_1 && addr <= (PHYS_SDRAM_1 + PHYS_SDRAM_1_SIZE)) || \
+  (addr >= PHYS_SDRAM_2 && addr <= (PHYS_SDRAM_2 + PHYS_SDRAM_2_SIZE)))
+
+#define PHYS_SDRAM_1_SIZE       (1 << 30)       /* 1GB */
+#define PHYS_SDRAM_2_SIZE       (1 << 30)       /* 1GB */
+
+#define CONFIG_SYS_SDRAM_BASE		PHYS_SDRAM_1
 #define CONFIG_SYS_INIT_RAM_ADDR	IRAM_BASE_ADDR
 #define CONFIG_SYS_INIT_RAM_SIZE	IRAM_SIZE
 
