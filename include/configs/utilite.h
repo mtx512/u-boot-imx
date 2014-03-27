@@ -114,7 +114,7 @@
 #define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 
 /* Framebuffer */
-#undef CONFIG_VIDEO /** Turn it on/off as required **/
+#define CONFIG_VIDEO /** Turn it on/off as required **/
 #ifdef CONFIG_VIDEO
 #define CONFIG_VIDEO
 #define CONFIG_VIDEO_IPUV3
